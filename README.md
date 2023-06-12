@@ -1,6 +1,9 @@
 # NVStreamer1080
 Utility to automatically detect NVidia GameStream activity and set a fitting resolution or switch to a second screen.
 
+Fix the DisplaySwitcher not function on win11 22H2, you can set the custom display switcher path by yourself
+自己设置DiplaySwitcher的路径。
+
 Written for personal use, so don't expect too much, it basically:
 
 1. Either changes resolution or

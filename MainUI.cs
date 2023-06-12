@@ -101,6 +101,21 @@ namespace NVStreamer1080 {
             }
         }
 
+        private string CustomDisplaySwitcherPath
+        {
+            get
+            {
+                return ((string)Registry.CurrentUser.OpenSubKey("SOFTWARE\\TapperWare\\NVStreamer1080", true).GetValue("CustomDisplaySwitcherPath", ""));
+            }
+            set
+            {
+                if (tb_cutomDisplaySwitcher.Text == value)
+                    return;
+                Registry.CurrentUser.OpenSubKey("SOFTWARE\\TapperWare\\NVStreamer1080", true).SetValue("CustomDisplaySwitcherPath", value, RegistryValueKind.String);
+                tb_cutomDisplaySwitcher.Text = value;
+            }
+        }
+
         private int DesiredWidth {
             get {
                 return ((int)Registry.CurrentUser.OpenSubKey("SOFTWARE\\TapperWare\\NVStreamer1080", true).GetValue("Width", 1920));
@@ -389,12 +404,17 @@ namespace NVStreamer1080 {
         public bool SunshineIsClientConnected = false;
         private void OnTick(object sender, EventArgs e) {
             var Switch = Path.Combine(Environment.SystemDirectory, "DisplaySwitch.exe");
+            if (CustomDisplaySwitcherPath != "")
+            {
+                Switch = CustomDisplaySwitcherPath;
+            }
+            
             var nvStreamers = Process.GetProcesses().Where(a => a.ProcessName.ToLower() == "nvstreamer").ToList();
             var nvRunning = nvStreamers.Any() || SunshineIsClientConnected;
             var nvPids = nvStreamers.Select(a => a.Id);
             var now = DateTime.Now;
 
-            ActionsScheduled = ActionsScheduled.Where((a) => {
+            ActionsScheduled = ActionsScheduled.Where((a) => { 
                 if (a.ScheduledDate < now) {
                     try {
                         DoLog(a.ScheduledAction.Execute());
@@ -620,6 +640,15 @@ namespace NVStreamer1080 {
         private void OnInpSunshineChange(object sender, EventArgs e) {
             SunshinePath=InSunshinePath.Text;
             SunshineInit();
+        }
+
+        private void btn_customDisplaySwitcher_Click(object sender, EventArgs e)
+        {
+            var ok = BrowseCustomDisplaySwitcher.ShowDialog(this);
+            if (ok == DialogResult.OK)
+                CustomDisplaySwitcherPath = BrowseCustomDisplaySwitcher.FileName;
+            else
+                CustomDisplaySwitcherPath = "";
         }
     }
 }
