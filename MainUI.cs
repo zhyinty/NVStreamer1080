@@ -314,6 +314,7 @@ namespace NVStreamer1080 {
             SHeight.Text = ReturnHeight.ToString();
             SRefresh.Text = ReturnRefresh.ToString();
             InSunshinePath.Text = SunshinePath;
+            tb_cutomDisplaySwitcher.Text = CustomDisplaySwitcherPath;
 
             CbAccelRestore.Checked = RestoreAccelerationPrecision;
             cbOverrideReturnRes.Checked = OverrideReturnResolution;
